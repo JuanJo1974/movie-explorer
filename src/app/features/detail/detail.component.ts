@@ -26,9 +26,10 @@ export class DetailComponent {
   readonly credits = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getCredits(id))));
   readonly similar = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getSimilar(id))));
 
-  readonly isFavorite = computed(() =>
-    this.movie() ? this.favorites.isFavorite(this.movie()!.id) : false
-  );
+  readonly isFavorite = computed(() => {
+    const m = this.movie();
+    return m ? this.favorites.isFavorite(m.id) : false;
+  });
 
   readonly cast = computed(() => this.credits()?.cast.slice(0, 8) ?? []);
 
