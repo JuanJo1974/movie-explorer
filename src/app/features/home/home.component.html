@@ -1,0 +1,42 @@
+<!-- Hero Banner -->
+@if (hero(); as movie) {
+  <section class="hero" [style.background-image]="'url(' + backdropUrl(movie.backdrop_path) + ')'">
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <h1>{{ movie.title }}</h1>
+        <div class="hero-meta">
+          <app-rating-badge [rating]="movie.vote_average" />
+          <span class="year">{{ movie.release_date | slice:0:4 }}</span>
+        </div>
+        <p class="overview">{{ movie.overview | slice:0:200 }}...</p>
+        <div class="hero-actions">
+          <a class="btn-primary" [routerLink]="['/movie', movie.id]">Ver detalle</a>
+          <button class="btn-outline" (click)="onHeroFavoriteClick()">
+            {{ heroIsFavorite() ? '❤️ En favoritos' : '🤍 Añadir' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+} @else {
+  <div class="hero hero--loading"></div>
+}
+
+<!-- Carouseles -->
+<section class="section">
+  <h2 class="section-title">Populares</h2>
+  @if (popular(); as movies) {
+    <app-movie-grid [movies]="movies.slice(0, 10)" />
+  } @else {
+    <div class="loading-row"></div>
+  }
+</section>
+
+<section class="section">
+  <h2 class="section-title">Mejor valoradas</h2>
+  @if (topRated(); as movies) {
+    <app-movie-grid [movies]="movies.slice(0, 10)" />
+  } @else {
+    <div class="loading-row"></div>
+  }
+</section>
