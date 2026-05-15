@@ -1,0 +1,30 @@
+<div class="page-content">
+  <h1 class="page-title">Tecnología</h1>
+  <p class="subtitle">Últimas noticias de tecnología e inteligencia artificial</p>
+
+  @if (articles() === undefined) {
+    <div class="loading">Cargando noticias...</div>
+  } @else if (articles()!.length === 0) {
+    <div class="empty">No hay noticias disponibles en este momento.</div>
+  } @else {
+    <div class="news-grid">
+      @for (article of articles(); track article.url) {
+        <a class="news-card" [href]="article.url" target="_blank" rel="noopener">
+          @if (article.image) {
+            <img class="card-image" [src]="article.image" [alt]="article.title" loading="lazy" />
+          } @else {
+            <div class="card-image card-image--placeholder"></div>
+          }
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-source">{{ article.source.name }}</span>
+              <span class="card-date">{{ article.publishedAt | date:'d MMM yyyy' }}</span>
+            </div>
+            <h2 class="card-title">{{ article.title }}</h2>
+            <p class="card-excerpt">{{ article.description }}</p>
+          </div>
+        </a>
+      }
+    </div>
+  }
+</div>

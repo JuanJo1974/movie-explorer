@@ -22,6 +22,11 @@ export const routes: Routes = [
       import('./features/favorites/favorites.component').then(m => m.FavoritesComponent)
   },
   {
+    path: 'tecnologia',
+    loadComponent: () =>
+      import('./features/tech/tech-news.component').then(m => m.TechNewsComponent)
+  },
+  {
     path: 'blog',
     loadComponent: () =>
       import('./features/blog/blog-list.component').then(m => m.BlogListComponent)
