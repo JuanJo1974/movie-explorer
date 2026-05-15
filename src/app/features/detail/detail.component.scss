@@ -94,6 +94,21 @@
   &:hover { background: rgba(1, 180, 228, 0.1); }
 }
 
+.amazon-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 20px;
+  background: #ff9900;
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: background 0.15s;
+
+  &:hover { background: #e68a00; }
+}
+
 .watch-providers {
   display: flex;
   align-items: center;

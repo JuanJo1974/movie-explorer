@@ -34,6 +34,11 @@ export class DetailComponent {
 
   readonly watchProviders = computed((): WatchProvider[] => this.providers()?.flatrate ?? []);
   readonly watchLink = computed((): string | null => this.providers()?.link ?? null);
+  readonly amazonUrl = computed((): string | null => {
+    const title = this.movie()?.title;
+    if (!title) return null;
+    return `https://www.amazon.es/s?k=${encodeURIComponent(title)}&tag=cineypelis-21`;
+  });
 
   readonly trailerUrl = computed((): SafeResourceUrl | null => {
     const trailer = this.videos()?.find(

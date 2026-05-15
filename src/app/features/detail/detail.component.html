@@ -38,6 +38,10 @@
         {{ isFavorite() ? '❤️ En favoritos' : '🤍 Añadir a favoritos' }}
       </button>
 
+      @if (amazonUrl(); as url) {
+        <a [href]="url" target="_blank" rel="noopener" class="amazon-btn">🛒 Comprar en Amazon</a>
+      }
+
       @if (watchLink(); as link) {
         <div class="watch-providers">
           <span class="watch-label">Disponible en:</span>
