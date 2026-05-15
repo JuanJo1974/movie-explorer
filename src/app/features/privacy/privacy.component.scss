@@ -1,0 +1,39 @@
+.page-content {
+  max-width: 720px;
+  margin: 48px auto;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.updated {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 32px;
+}
+
+.block {
+  margin-bottom: 32px;
+
+  h2 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--color-accent);
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+}

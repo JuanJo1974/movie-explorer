@@ -22,6 +22,21 @@ export const routes: Routes = [
       import('./features/favorites/favorites.component').then(m => m.FavoritesComponent)
   },
   {
+    path: 'about',
+    loadComponent: () =>
+      import('./features/about/about.component').then(m => m.AboutComponent)
+  },
+  {
+    path: 'contact',
+    loadComponent: () =>
+      import('./features/contact/contact.component').then(m => m.ContactComponent)
+  },
+  {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./features/privacy/privacy.component').then(m => m.PrivacyComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

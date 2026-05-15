@@ -1,0 +1,22 @@
+<div class="page-content">
+  <h1 class="page-title">Contacto</h1>
+
+  <p class="intro">
+    ¿Tienes alguna sugerencia, duda o comentario? Escríbenos directamente a
+    <a [href]="'mailto:' + email">{{ email }}</a> o usa el formulario de abajo.
+  </p>
+
+  <form class="contact-form" (submit)="send(); $event.preventDefault()">
+    <label>
+      Nombre
+      <input type="text" [(ngModel)]="name" placeholder="Tu nombre" required />
+    </label>
+
+    <label>
+      Mensaje
+      <textarea [(ngModel)]="message" rows="6" placeholder="Escribe tu mensaje aquí..." required></textarea>
+    </label>
+
+    <button type="submit" [disabled]="!name.trim() || !message.trim()">Enviar mensaje</button>
+  </form>
+</div>
