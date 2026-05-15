@@ -42,3 +42,15 @@ export interface MovieListResponse {
 export interface GenreListResponse {
   genres: Genre[];
 }
+
+export interface Video {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+}
+
+export interface VideoListResponse {
+  results: Video[];
+}

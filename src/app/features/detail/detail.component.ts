@@ -2,6 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SlicePipe } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { map, switchMap } from 'rxjs';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { FavoritesService } from '../../core/services/favorites.service';
@@ -19,12 +20,24 @@ export class DetailComponent {
   private readonly tmdb = inject(TmdbService);
   private readonly favorites = inject(FavoritesService);
   private readonly route = inject(ActivatedRoute);
+  private readonly sanitizer = inject(DomSanitizer);
 
   private readonly id$ = this.route.paramMap.pipe(map(p => +p.get('id')!));
 
   readonly movie = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getMovie(id))));
   readonly credits = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getCredits(id))));
   readonly similar = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getSimilar(id))));
+  readonly videos = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getVideos(id))));
+
+  readonly trailerUrl = computed((): SafeResourceUrl | null => {
+    const trailer = this.videos()?.find(
+      v => v.site === 'YouTube' && v.type === 'Trailer'
+    ) ?? this.videos()?.find(v => v.site === 'YouTube');
+    if (!trailer) return null;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(
+      `https://www.youtube.com/embed/${trailer.key}`
+    );
+  });
 
   readonly isFavorite = computed(() => {
     const m = this.movie();

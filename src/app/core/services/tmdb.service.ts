@@ -7,7 +7,9 @@ import {
   GenreListResponse,
   Movie,
   MovieDetail,
-  MovieListResponse
+  MovieListResponse,
+  Video,
+  VideoListResponse
 } from '../models/movie.model';
 
 @Injectable({ providedIn: 'root' })
@@ -51,6 +53,12 @@ export class TmdbService {
   getSimilar(id: number): Observable<Movie[]> {
     return this.http
       .get<MovieListResponse>(`${this.baseUrl}/movie/${id}/similar`)
+      .pipe(map(r => r.results));
+  }
+
+  getVideos(id: number): Observable<Video[]> {
+    return this.http
+      .get<VideoListResponse>(`${this.baseUrl}/movie/${id}/videos`)
       .pipe(map(r => r.results));
   }
 

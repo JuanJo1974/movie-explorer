@@ -56,6 +56,21 @@
     </section>
   }
 
+  <!-- Trailer -->
+  @if (trailerUrl()) {
+    <section class="section">
+      <h2 class="section-title">Tráiler</h2>
+      <div class="trailer-wrapper">
+        <iframe
+          [src]="trailerUrl()"
+          frameborder="0"
+          allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        ></iframe>
+      </div>
+    </section>
+  }
+
   <!-- Similar -->
   @if (similar()?.length) {
     <section class="section">

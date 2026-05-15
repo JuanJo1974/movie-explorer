@@ -147,6 +147,21 @@
   margin-top: 2px;
 }
 
+.trailer-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .loading-state {
   padding: 80px;
   text-align: center;
