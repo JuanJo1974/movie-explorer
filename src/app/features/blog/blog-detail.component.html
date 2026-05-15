@@ -1,0 +1,20 @@
+@if (article(); as post) {
+  <div class="page-content">
+    <a class="back-link" routerLink="/blog">← Volver al blog</a>
+
+    <article>
+      <header class="article-header">
+        <span class="article-date">{{ post.date | date:'d MMMM yyyy':'':'es' }}</span>
+        <h1 class="article-title">{{ post.title }}</h1>
+        <p class="article-excerpt">{{ post.excerpt }}</p>
+      </header>
+
+      <div class="article-body" [innerHTML]="post.content"></div>
+    </article>
+  </div>
+} @else {
+  <div class="not-found">
+    <p>Artículo no encontrado.</p>
+    <a routerLink="/blog">← Volver al blog</a>
+  </div>
+}

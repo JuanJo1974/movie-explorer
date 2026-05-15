@@ -22,6 +22,16 @@ export const routes: Routes = [
       import('./features/favorites/favorites.component').then(m => m.FavoritesComponent)
   },
   {
+    path: 'blog',
+    loadComponent: () =>
+      import('./features/blog/blog-list.component').then(m => m.BlogListComponent)
+  },
+  {
+    path: 'blog/:slug',
+    loadComponent: () =>
+      import('./features/blog/blog-detail.component').then(m => m.BlogDetailComponent)
+  },
+  {
     path: 'about',
     loadComponent: () =>
       import('./features/about/about.component').then(m => m.AboutComponent)

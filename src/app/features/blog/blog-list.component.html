@@ -1,0 +1,17 @@
+<div class="page-content">
+  <h1 class="page-title">Blog</h1>
+  <p class="subtitle">Artículos, reseñas y guías sobre cine y películas</p>
+
+  <div class="article-grid">
+    @for (article of articles; track article.slug) {
+      <a class="article-card" [routerLink]="['/blog', article.slug]">
+        <div class="card-body">
+          <span class="card-date">{{ article.date | date:'d MMMM yyyy':'':'es' }}</span>
+          <h2 class="card-title">{{ article.title }}</h2>
+          <p class="card-excerpt">{{ article.excerpt }}</p>
+          <span class="card-link">Leer artículo →</span>
+        </div>
+      </a>
+    }
+  </div>
+</div>
