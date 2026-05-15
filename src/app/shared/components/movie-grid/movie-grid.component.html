@@ -1,0 +1,11 @@
+<div class="grid">
+  @for (movie of movies(); track movie.id) {
+    <app-movie-card
+      [movie]="movie"
+      [isFavorite]="favorites.isFavorite(movie.id)"
+      (favoriteToggled)="onFavoriteToggled($event)"
+    />
+  } @empty {
+    <p class="empty">No hay películas para mostrar.</p>
+  }
+</div>
