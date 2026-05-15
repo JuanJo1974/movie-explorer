@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 
 export interface NewsArticle {
   title: string;
@@ -36,6 +36,12 @@ export class NewsService {
           apikey: this.apiKey
         }
       })
-      .pipe(map(r => r.articles));
+      .pipe(
+        map(r => r.articles),
+        catchError(err => {
+          console.error('GNews API error:', err);
+          return of([]);
+        })
+      );
   }
 }
