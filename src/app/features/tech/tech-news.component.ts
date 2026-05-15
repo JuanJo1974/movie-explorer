@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { NewsService, NewsArticle } from '../../core/services/news.service';
+import { NewsService } from '../../core/services/news.service';
 import { SeoService } from '../../core/services/seo.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { SeoService } from '../../core/services/seo.service';
 export class TechNewsComponent {
   private readonly news = inject(NewsService);
 
-  readonly articles = toSignal(this.news.getTech(), { initialValue: undefined as NewsArticle[] | undefined });
+  readonly articles = toSignal(this.news.getTech());
 
   constructor() {
     inject(SeoService).set('Tecnología', 'Últimas noticias de tecnología e inteligencia artificial actualizadas al momento.');
