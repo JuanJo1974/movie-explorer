@@ -1,0 +1,16 @@
+<div class="badge">
+  <svg viewBox="0 0 44 44" width="44" height="44">
+    <circle cx="22" cy="22" r="18" fill="#081c27" stroke="#204529" stroke-width="3"/>
+    <circle
+      cx="22" cy="22" r="18"
+      fill="none"
+      [attr.stroke]="color()"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-dasharray="0 113"
+      [attr.stroke-dasharray]="dashArray()"
+      transform="rotate(-90 22 22)"
+    />
+  </svg>
+  <span class="label">{{ percentage() }}<sup>%</sup></span>
+</div>
