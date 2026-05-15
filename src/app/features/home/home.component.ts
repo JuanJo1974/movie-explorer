@@ -23,9 +23,10 @@ export class HomeComponent {
   readonly topRated = toSignal(this.tmdb.getTopRated());
 
   readonly hero = computed(() => this.trending()?.[0] ?? null);
-  readonly heroIsFavorite = computed(() =>
-    this.hero() ? this.favorites.isFavorite(this.hero()!.id) : false
-  );
+  readonly heroIsFavorite = computed(() => {
+    const h = this.hero();
+    return h ? this.favorites.isFavorite(h.id) : false;
+  });
 
   onHeroFavoriteClick(): void {
     const movie = this.hero();
