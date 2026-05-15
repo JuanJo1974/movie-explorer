@@ -56,6 +56,12 @@ export class TmdbService {
       .pipe(map(r => r.results));
   }
 
+  discoverByGenre(genreId: number, page = 1): Observable<MovieListResponse> {
+    return this.http.get<MovieListResponse>(`${this.baseUrl}/discover/movie`, {
+      params: { with_genres: genreId, sort_by: 'release_date.desc', page, 'vote_count.gte': 10 }
+    });
+  }
+
   getVideos(id: number): Observable<Video[]> {
     return this.http
       .get<VideoListResponse>(`${this.baseUrl}/movie/${id}/videos`)

@@ -6,7 +6,7 @@
       type="search"
       placeholder="Título de la película..."
       [ngModel]="query()"
-      (ngModelChange)="query.set($event)"
+      (ngModelChange)="onQueryChange($event)"
       class="search-input"
       autofocus
     />
@@ -30,50 +30,40 @@
   <!-- Results -->
   @if (isLoading()) {
     <p class="status">Buscando...</p>
-  } @else if (!hasQuery()) {
-    <p class="status">Escribe al menos 2 caracteres para buscar.</p>
+  } @else if (!isActive()) {
+    <p class="status">Escribe un título o selecciona una categoría.</p>
   } @else if (filteredResults().length === 0) {
-    <p class="status">No se encontraron resultados para "<strong>{{ query() }}</strong>".</p>
+    <p class="status">No se encontraron resultados.</p>
   } @else {
-    <p class="results-count">{{ totalResults() }} resultado(s) — página {{ currentPage() }} de {{ totalPages() }}</p>
+    <p class="results-count">
+      @if (hasGenre() && !hasQuery()) {
+        {{ selectedGenreName() }} — {{ totalResults() }} películas, de más nueva a más antigua · página {{ page() }} de {{ totalPages() }}
+      } @else {
+        {{ totalResults() }} resultado(s) · página {{ page() }} de {{ totalPages() }}
+      }
+    </p>
     <app-movie-grid [movies]="filteredResults()" />
 
     <!-- Pagination -->
     @if (totalPages() > 1) {
       <div class="pagination">
-        <button
-          class="page-btn"
-          [disabled]="currentPage() === 1"
-          (click)="goToPage(currentPage() - 1)"
-        >&#8249;</button>
+        <button class="page-btn" [disabled]="page() === 1" (click)="goToPage(page() - 1)">&#8249;</button>
 
         @if (pages()[0] > 1) {
           <button class="page-btn" (click)="goToPage(1)">1</button>
-          @if (pages()[0] > 2) {
-            <span class="dots">…</span>
-          }
+          @if (pages()[0] > 2) { <span class="dots">…</span> }
         }
 
         @for (p of pages(); track p) {
-          <button
-            class="page-btn"
-            [class.active]="p === currentPage()"
-            (click)="goToPage(p)"
-          >{{ p }}</button>
+          <button class="page-btn" [class.active]="p === page()" (click)="goToPage(p)">{{ p }}</button>
         }
 
         @if (pages()[pages().length - 1] < totalPages()) {
-          @if (pages()[pages().length - 1] < totalPages() - 1) {
-            <span class="dots">…</span>
-          }
+          @if (pages()[pages().length - 1] < totalPages() - 1) { <span class="dots">…</span> }
           <button class="page-btn" (click)="goToPage(totalPages())">{{ totalPages() }}</button>
         }
 
-        <button
-          class="page-btn"
-          [disabled]="currentPage() === totalPages()"
-          (click)="goToPage(currentPage() + 1)"
-        >&#8250;</button>
+        <button class="page-btn" [disabled]="page() === totalPages()" (click)="goToPage(page() + 1)">&#8250;</button>
       </div>
     }
   }
