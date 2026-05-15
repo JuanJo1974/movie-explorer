@@ -35,7 +35,46 @@
   } @else if (filteredResults().length === 0) {
     <p class="status">No se encontraron resultados para "<strong>{{ query() }}</strong>".</p>
   } @else {
-    <p class="results-count">{{ filteredResults().length }} resultado(s)</p>
+    <p class="results-count">{{ totalResults() }} resultado(s) — página {{ currentPage() }} de {{ totalPages() }}</p>
     <app-movie-grid [movies]="filteredResults()" />
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button
+          class="page-btn"
+          [disabled]="currentPage() === 1"
+          (click)="goToPage(currentPage() - 1)"
+        >&#8249;</button>
+
+        @if (pages()[0] > 1) {
+          <button class="page-btn" (click)="goToPage(1)">1</button>
+          @if (pages()[0] > 2) {
+            <span class="dots">…</span>
+          }
+        }
+
+        @for (p of pages(); track p) {
+          <button
+            class="page-btn"
+            [class.active]="p === currentPage()"
+            (click)="goToPage(p)"
+          >{{ p }}</button>
+        }
+
+        @if (pages()[pages().length - 1] < totalPages()) {
+          @if (pages()[pages().length - 1] < totalPages() - 1) {
+            <span class="dots">…</span>
+          }
+          <button class="page-btn" (click)="goToPage(totalPages())">{{ totalPages() }}</button>
+        }
+
+        <button
+          class="page-btn"
+          [disabled]="currentPage() === totalPages()"
+          (click)="goToPage(currentPage() + 1)"
+        >&#8250;</button>
+      </div>
+    }
   }
 </div>
