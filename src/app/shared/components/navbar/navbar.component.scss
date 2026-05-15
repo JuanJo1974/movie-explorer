@@ -15,6 +15,15 @@
   font-weight: 700;
   color: var(--color-accent);
   margin-right: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.brand-copy {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--color-text-muted);
 }
 
 .links {
