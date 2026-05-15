@@ -19,8 +19,6 @@ interface GNewsResponse {
 @Injectable({ providedIn: 'root' })
 export class NewsService {
   private readonly http = inject(HttpClient);
-  private readonly apiKey = 'b9cff31dabba28d716b92e84fa3eef3c';
-  private readonly baseUrl = 'https://gnews.io/api/v4';
 
   private get lang(): string {
     return navigator.language.startsWith('es') ? 'es' : 'en';
@@ -28,18 +26,13 @@ export class NewsService {
 
   getTech(): Observable<NewsArticle[]> {
     return this.http
-      .get<GNewsResponse>(`${this.baseUrl}/top-headlines`, {
-        params: {
-          topic: 'technology',
-          lang: this.lang,
-          max: '20',
-          apikey: this.apiKey
-        }
+      .get<GNewsResponse>(`/.netlify/functions/tech-news`, {
+        params: { lang: this.lang }
       })
       .pipe(
         map(r => r.articles),
         catchError(err => {
-          console.error('GNews API error:', err);
+          console.error('Tech news error:', err);
           return of([]);
         })
       );
