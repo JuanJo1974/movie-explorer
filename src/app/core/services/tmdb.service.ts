@@ -36,6 +36,18 @@ export class TmdbService {
       .pipe(map(r => r.results));
   }
 
+  getNowPlaying(): Observable<Movie[]> {
+    return this.http
+      .get<MovieListResponse>(`${this.baseUrl}/movie/now_playing`)
+      .pipe(map(r => r.results));
+  }
+
+  getUpcoming(): Observable<Movie[]> {
+    return this.http
+      .get<MovieListResponse>(`${this.baseUrl}/movie/upcoming`)
+      .pipe(map(r => r.results));
+  }
+
   search(query: string, page = 1): Observable<MovieListResponse> {
     return this.http.get<MovieListResponse>(`${this.baseUrl}/search/movie`, {
       params: { query, page }

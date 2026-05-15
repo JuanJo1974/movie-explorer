@@ -19,8 +19,8 @@ export class HomeComponent {
   private readonly favorites = inject(FavoritesService);
 
   readonly trending = toSignal(this.tmdb.getTrending());
-  readonly popular = toSignal(this.tmdb.getPopular());
-  readonly topRated = toSignal(this.tmdb.getTopRated());
+  readonly nowPlaying = toSignal(this.tmdb.getNowPlaying());
+  readonly upcoming = toSignal(this.tmdb.getUpcoming());
 
   readonly hero = computed(() => this.trending()?.[0] ?? null);
   readonly heroIsFavorite = computed(() => {
