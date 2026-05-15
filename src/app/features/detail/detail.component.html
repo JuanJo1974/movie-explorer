@@ -1,0 +1,68 @@
+@if (movie(); as film) {
+  <!-- Backdrop -->
+  <div
+    class="backdrop"
+    [style.background-image]="'url(' + backdropUrl(film.backdrop_path) + ')'"
+  ></div>
+
+  <!-- Main content -->
+  <div class="detail-content">
+    <div class="poster-col">
+      <img [src]="posterUrl(film.poster_path)" [alt]="film.title" class="poster" />
+    </div>
+
+    <div class="info-col">
+      <h1 class="title">{{ film.title }}</h1>
+
+      @if (film.tagline) {
+        <p class="tagline">{{ film.tagline }}</p>
+      }
+
+      <div class="meta">
+        <app-rating-badge [rating]="film.vote_average" />
+        <span class="year">{{ film.release_date | slice:0:4 }}</span>
+        @if (film.runtime) {
+          <span class="year">{{ runtime(film.runtime) }}</span>
+        }
+      </div>
+
+      <div class="genres">
+        @for (genre of film.genres; track genre.id) {
+          <span class="genre-tag">{{ genre.name }}</span>
+        }
+      </div>
+
+      <p class="overview">{{ film.overview }}</p>
+
+      <button class="fav-btn" (click)="onFavoriteClick()">
+        {{ isFavorite() ? '❤️ En favoritos' : '🤍 Añadir a favoritos' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Cast -->
+  @if (cast().length > 0) {
+    <section class="section">
+      <h2 class="section-title">Reparto principal</h2>
+      <div class="cast-list">
+        @for (actor of cast(); track actor.id) {
+          <div class="cast-card">
+            <img [src]="profileUrl(actor.profile_path)" [alt]="actor.name" />
+            <p class="actor-name">{{ actor.name }}</p>
+            <p class="character">{{ actor.character }}</p>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Similar -->
+  @if (similar()?.length) {
+    <section class="section">
+      <h2 class="section-title">Películas similares</h2>
+      <app-movie-grid [movies]="similar()!.slice(0, 8)" />
+    </section>
+  }
+} @else {
+  <div class="loading-state">Cargando...</div>
+}
