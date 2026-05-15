@@ -1,0 +1,41 @@
+<div class="search-page">
+  <h1 class="page-title">Buscar películas</h1>
+
+  <div class="search-bar">
+    <input
+      type="search"
+      placeholder="Título de la película..."
+      [ngModel]="query()"
+      (ngModelChange)="query.set($event)"
+      class="search-input"
+      autofocus
+    />
+  </div>
+
+  <!-- Genre chips -->
+  @if (genres().length > 0) {
+    <div class="genres">
+      @for (genre of genres(); track genre.id) {
+        <button
+          class="chip"
+          [class.active]="selectedGenre() === genre.id"
+          (click)="toggleGenre(genre.id)"
+        >
+          {{ genre.name }}
+        </button>
+      }
+    </div>
+  }
+
+  <!-- Results -->
+  @if (isLoading()) {
+    <p class="status">Buscando...</p>
+  } @else if (!hasQuery()) {
+    <p class="status">Escribe al menos 2 caracteres para buscar.</p>
+  } @else if (filteredResults().length === 0) {
+    <p class="status">No se encontraron resultados para "<strong>{{ query() }}</strong>".</p>
+  } @else {
+    <p class="results-count">{{ filteredResults().length }} resultado(s)</p>
+    <app-movie-grid [movies]="filteredResults()" />
+  }
+</div>
