@@ -1,0 +1,25 @@
+<a class="card" [routerLink]="['/movie', movie().id]">
+  <div class="poster-wrapper">
+    <img
+      [src]="tmdb.posterUrl(movie().poster_path)"
+      [alt]="movie().title"
+      loading="lazy"
+    />
+    <div class="rating">
+      <app-rating-badge [rating]="movie().vote_average" />
+    </div>
+    <button
+      class="fav-btn"
+      [class.active]="isFavorite()"
+      data-testid="favorite-btn"
+      (click)="onFavoriteClick($event)"
+      [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+    >
+      {{ isFavorite() ? '❤️' : '🤍' }}
+    </button>
+  </div>
+  <div class="info">
+    <p class="title" data-testid="movie-title">{{ movie().title }}</p>
+    <p class="year">{{ movie().release_date | slice:0:4 }}</p>
+  </div>
+</a>
