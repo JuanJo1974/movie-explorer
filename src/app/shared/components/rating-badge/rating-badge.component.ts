@@ -14,9 +14,9 @@ export class RatingBadgeComponent {
 
   readonly color = computed(() => {
     const p = this.percentage();
-    if (p >= 70) return '#90cea1';
-    if (p >= 50) return '#d2d531';
-    return '#db2360';
+    if (p >= 70) return 'var(--color-accent-alt)';
+    if (p >= 50) return 'var(--color-rating-mid)';
+    return 'var(--color-rating-bad)';
   });
 
   readonly dashArray = computed(() => {
