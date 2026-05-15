@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { SeoService } from '../../core/services/seo.service';
 
 @Component({
   selector: 'app-about',
@@ -8,4 +9,8 @@ import { RouterLink } from '@angular/router';
   templateUrl: './about.component.html',
   styleUrl: './about.component.scss'
 })
-export class AboutComponent {}
+export class AboutComponent {
+  constructor() {
+    inject(SeoService).set('Sobre nosotros', 'Conoce qué es CinesYPelis, de dónde vienen los datos y quién está detrás del proyecto.');
+  }
+}

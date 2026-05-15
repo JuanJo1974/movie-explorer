@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://cineypelis.netlify.app/sitemap.xml

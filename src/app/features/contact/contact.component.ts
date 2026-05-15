@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { SeoService } from '../../core/services/seo.service';
 
 @Component({
   selector: 'app-contact',
@@ -9,6 +10,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './contact.component.scss'
 })
 export class ContactComponent {
+  constructor() {
+    inject(SeoService).set('Contacto', 'Ponte en contacto con el equipo de CinesYPelis para sugerencias, dudas o comentarios.');
+  }
+
   readonly email = 'juanjoseft@gmail.com';
 
   mailtoLink(name: string, message: string): string {

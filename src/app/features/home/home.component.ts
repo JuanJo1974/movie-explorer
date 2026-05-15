@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { SlicePipe } from '@angular/common';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { FavoritesService } from '../../core/services/favorites.service';
+import { SeoService } from '../../core/services/seo.service';
 import { MovieGridComponent } from '../../shared/components/movie-grid/movie-grid.component';
 import { RatingBadgeComponent } from '../../shared/components/rating-badge/rating-badge.component';
 
@@ -17,6 +18,11 @@ import { RatingBadgeComponent } from '../../shared/components/rating-badge/ratin
 export class HomeComponent {
   private readonly tmdb = inject(TmdbService);
   private readonly favorites = inject(FavoritesService);
+  private readonly seo = inject(SeoService);
+
+  constructor() {
+    this.seo.set('Inicio', 'Descubre las películas en cartelera, próximos estrenos y las mejor valoradas. Busca cualquier título y guarda tus favoritos.');
+  }
 
   readonly trending = toSignal(this.tmdb.getTrending());
   readonly nowPlaying = toSignal(this.tmdb.getNowPlaying());

@@ -3,6 +3,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { combineLatest, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { TmdbService } from '../../core/services/tmdb.service';
+import { SeoService } from '../../core/services/seo.service';
 import { Genre } from '../../core/models/movie.model';
 import { MovieGridComponent } from '../../shared/components/movie-grid/movie-grid.component';
 
@@ -15,6 +16,11 @@ import { MovieGridComponent } from '../../shared/components/movie-grid/movie-gri
 })
 export class SearchComponent {
   private readonly tmdb = inject(TmdbService);
+  private readonly seo = inject(SeoService);
+
+  constructor() {
+    this.seo.set('Buscar películas', 'Busca cualquier película por título o género en CinesYPelis.');
+  }
 
   readonly query = signal('');
   readonly selectedGenre = signal<number | null>(null);

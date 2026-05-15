@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FavoritesService } from '../../core/services/favorites.service';
+import { SeoService } from '../../core/services/seo.service';
 import { MovieCardComponent } from '../../shared/components/movie-card/movie-card.component';
 import { Movie } from '../../core/models/movie.model';
 
@@ -13,6 +14,11 @@ import { Movie } from '../../core/models/movie.model';
 })
 export class FavoritesComponent {
   readonly favoritesService = inject(FavoritesService);
+  private readonly seo = inject(SeoService);
+
+  constructor() {
+    this.seo.set('Mis favoritos', 'Tus películas favoritas guardadas en CinesYPelis.');
+  }
 
   readonly favorites = this.favoritesService.favorites;
 
