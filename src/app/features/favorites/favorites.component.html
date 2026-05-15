@@ -1,0 +1,26 @@
+<div class="favorites-page">
+  <h1 class="page-title">
+    Mis favoritos
+    @if (favorites().length > 0) {
+      <span class="count">{{ favorites().length }}</span>
+    }
+  </h1>
+
+  @if (favorites().length === 0) {
+    <div class="empty-state">
+      <p class="empty-icon">🎬</p>
+      <p class="empty-text">Todavía no tienes películas guardadas.</p>
+      <a routerLink="/search" class="cta-btn">Explorar películas</a>
+    </div>
+  } @else {
+    <div class="grid">
+      @for (movie of favorites(); track movie.id) {
+        <app-movie-card
+          [movie]="movie"
+          [isFavorite]="true"
+          (favoriteToggled)="onFavoriteToggled($event)"
+        />
+      }
+    </div>
+  }
+</div>
