@@ -37,6 +37,18 @@
       <button class="fav-btn" (click)="onFavoriteClick()">
         {{ isFavorite() ? '❤️ En favoritos' : '🤍 Añadir a favoritos' }}
       </button>
+
+      @if (watchLink(); as link) {
+        <div class="watch-providers">
+          <span class="watch-label">Disponible en:</span>
+          <div class="provider-logos">
+            @for (p of watchProviders(); track p.provider_id) {
+              <img [src]="logoUrl(p.logo_path)" [alt]="p.provider_name" [title]="p.provider_name" class="provider-logo" />
+            }
+          </div>
+          <a [href]="link" target="_blank" rel="noopener" class="justwatch-link">Ver en JustWatch →</a>
+        </div>
+      }
     </div>
   </div>
 

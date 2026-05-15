@@ -9,7 +9,9 @@ import {
   MovieDetail,
   MovieListResponse,
   Video,
-  VideoListResponse
+  VideoListResponse,
+  WatchProvidersResponse,
+  WatchProvidersResult
 } from '../models/movie.model';
 
 @Injectable({ providedIn: 'root' })
@@ -74,6 +76,12 @@ export class TmdbService {
     });
   }
 
+  getWatchProviders(id: number, country: string): Observable<WatchProvidersResult | null> {
+    return this.http
+      .get<WatchProvidersResponse>(`${this.baseUrl}/movie/${id}/watch/providers`)
+      .pipe(map(r => r.results[country] ?? null));
+  }
+
   getVideos(id: number): Observable<Video[]> {
     return this.http
       .get<VideoListResponse>(`${this.baseUrl}/movie/${id}/videos`)
@@ -84,6 +92,10 @@ export class TmdbService {
     return this.http
       .get<GenreListResponse>(`${this.baseUrl}/genre/movie/list`)
       .pipe(map(r => r.genres));
+  }
+
+  logoUrl(path: string): string {
+    return `${this.imageBase}w45${path}`;
   }
 
   posterUrl(path: string | null, size = 'w500'): string {

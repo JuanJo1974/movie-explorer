@@ -94,6 +94,42 @@
   &:hover { background: rgba(1, 180, 228, 0.1); }
 }
 
+.watch-providers {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.watch-label {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.provider-logos {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.provider-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.justwatch-link {
+  font-size: 13px;
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &:hover { text-decoration: underline; }
+}
+
 .section {
   margin-top: 48px;
 }

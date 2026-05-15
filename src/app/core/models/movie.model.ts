@@ -54,3 +54,18 @@ export interface Video {
 export interface VideoListResponse {
   results: Video[];
 }
+
+export interface WatchProvider {
+  provider_id: number;
+  provider_name: string;
+  logo_path: string;
+}
+
+export interface WatchProvidersResult {
+  link: string;
+  flatrate?: WatchProvider[];
+}
+
+export interface WatchProvidersResponse {
+  results: Record<string, WatchProvidersResult>;
+}

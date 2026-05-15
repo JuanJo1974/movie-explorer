@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { SlicePipe } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { map, switchMap } from 'rxjs';
+import { WatchProvider } from '../../core/models/movie.model';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { MovieGridComponent } from '../../shared/components/movie-grid/movie-grid.component';
@@ -22,12 +23,17 @@ export class DetailComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly sanitizer = inject(DomSanitizer);
 
+  private readonly country = navigator.language.split('-')[1] ?? 'ES';
   private readonly id$ = this.route.paramMap.pipe(map(p => +p.get('id')!));
 
   readonly movie = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getMovie(id))));
   readonly credits = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getCredits(id))));
   readonly similar = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getSimilar(id))));
   readonly videos = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getVideos(id))));
+  readonly providers = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getWatchProviders(id, this.country))));
+
+  readonly watchProviders = computed((): WatchProvider[] => this.providers()?.flatrate ?? []);
+  readonly watchLink = computed((): string | null => this.providers()?.link ?? null);
 
   readonly trailerUrl = computed((): SafeResourceUrl | null => {
     const trailer = this.videos()?.find(
@@ -49,6 +55,10 @@ export class DetailComponent {
   onFavoriteClick(): void {
     const m = this.movie();
     if (m) this.favorites.toggle(m);
+  }
+
+  logoUrl(path: string): string {
+    return this.tmdb.logoUrl(path);
   }
 
   backdropUrl(path: string | null): string {
