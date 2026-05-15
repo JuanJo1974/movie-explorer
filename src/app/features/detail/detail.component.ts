@@ -1,9 +1,9 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SlicePipe } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { map, switchMap, tap } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 import { WatchProvider } from '../../core/models/movie.model';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { FavoritesService } from '../../core/services/favorites.service';
@@ -28,10 +28,14 @@ export class DetailComponent {
   private readonly country = navigator.language.split('-')[1] ?? 'ES';
   private readonly id$ = this.route.paramMap.pipe(map(p => +p.get('id')!));
 
-  readonly movie = toSignal(this.id$.pipe(
-    switchMap(id => this.tmdb.getMovie(id)),
-    tap(film => this.seo.set(film.title, film.overview?.slice(0, 160) || film.title))
-  ));
+  readonly movie = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getMovie(id))));
+
+  constructor() {
+    effect(() => {
+      const film = this.movie();
+      if (film) this.seo.set(film.title, film.overview?.slice(0, 160) || film.title);
+    });
+  }
   readonly credits = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getCredits(id))));
   readonly similar = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getSimilar(id))));
   readonly videos = toSignal(this.id$.pipe(switchMap(id => this.tmdb.getVideos(id))));
