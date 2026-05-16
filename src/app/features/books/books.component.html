@@ -27,7 +27,7 @@
         <h2 class="section-title">Resultados para "{{ searchQuery }}"</h2>
         <div class="books-grid">
           @for (book of searchResults()!; track book.key) {
-            <div class="book-card">
+            <a class="book-card" [routerLink]="['/libros', workId(book)]">
               @if (coverUrl(book)) {
                 <img class="book-cover" [src]="coverUrl(book)" [alt]="book.title" loading="lazy" />
               } @else {
@@ -42,18 +42,17 @@
                   <p class="book-date">{{ book.first_publish_year }}</p>
                 }
                 <div class="book-actions">
-                  <a [href]="infoUrl(book)" target="_blank" rel="noopener" class="btn-info">Ver detalles</a>
-                  <a [href]="amazonUrl(book)" target="_blank" rel="noopener" class="btn-amazon">🛒 Amazon</a>
+                  <a [href]="amazonUrl(book)" target="_blank" rel="noopener" class="btn-amazon" (click)="$event.stopPropagation()">🛒 Amazon</a>
                 </div>
               </div>
-            </div>
+            </a>
           }
         </div>
       </section>
     }
   }
 
-  <!-- Secciones fijas (visibles cuando no hay búsqueda activa) -->
+  <!-- Secciones fijas -->
   @if (!searching()) {
     <section class="book-section">
       <h2 class="section-title">Más vendidos</h2>
@@ -64,7 +63,7 @@
       } @else {
         <div class="books-grid">
           @for (book of bestsellers()!; track book.key) {
-            <div class="book-card">
+            <a class="book-card" [routerLink]="['/libros', workId(book)]">
               @if (coverUrl(book)) {
                 <img class="book-cover" [src]="coverUrl(book)" [alt]="book.title" loading="lazy" />
               } @else {
@@ -79,11 +78,10 @@
                   <p class="book-date">{{ book.first_publish_year }}</p>
                 }
                 <div class="book-actions">
-                  <a [href]="infoUrl(book)" target="_blank" rel="noopener" class="btn-info">Ver detalles</a>
-                  <a [href]="amazonUrl(book)" target="_blank" rel="noopener" class="btn-amazon">🛒 Amazon</a>
+                  <a [href]="amazonUrl(book)" target="_blank" rel="noopener" class="btn-amazon" (click)="$event.stopPropagation()">🛒 Amazon</a>
                 </div>
               </div>
-            </div>
+            </a>
           }
         </div>
       }
@@ -98,7 +96,7 @@
       } @else {
         <div class="books-grid">
           @for (book of newReleases()!; track book.key) {
-            <div class="book-card">
+            <a class="book-card" [routerLink]="['/libros', workId(book)]">
               @if (coverUrl(book)) {
                 <img class="book-cover" [src]="coverUrl(book)" [alt]="book.title" loading="lazy" />
               } @else {
@@ -113,11 +111,10 @@
                   <p class="book-date">{{ book.first_publish_year }}</p>
                 }
                 <div class="book-actions">
-                  <a [href]="infoUrl(book)" target="_blank" rel="noopener" class="btn-info">Ver detalles</a>
-                  <a [href]="amazonUrl(book)" target="_blank" rel="noopener" class="btn-amazon">🛒 Amazon</a>
+                  <a [href]="amazonUrl(book)" target="_blank" rel="noopener" class="btn-amazon" (click)="$event.stopPropagation()">🛒 Amazon</a>
                 </div>
               </div>
-            </div>
+            </a>
           }
         </div>
       }

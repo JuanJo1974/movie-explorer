@@ -91,6 +91,9 @@
   display: flex;
   flex-direction: column;
   transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-3px);

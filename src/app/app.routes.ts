@@ -27,6 +27,11 @@ export const routes: Routes = [
       import('./features/books/books.component').then(m => m.BooksComponent)
   },
   {
+    path: 'libros/:id',
+    loadComponent: () =>
+      import('./features/books/book-detail.component').then(m => m.BookDetailComponent)
+  },
+  {
     path: 'tecnologia',
     loadComponent: () =>
       import('./features/tech/tech-news.component').then(m => m.TechNewsComponent)

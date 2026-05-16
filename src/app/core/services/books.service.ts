@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 
 export interface BookItem {
   key: string;
@@ -8,6 +8,15 @@ export interface BookItem {
   author_name?: string[];
   cover_i?: number;
   first_publish_year?: number;
+}
+
+export interface BookDetail {
+  title: string;
+  description?: string;
+  covers?: number[];
+  subjects?: string[];
+  first_publish_date?: string;
+  authors?: string[];
 }
 
 interface OpenLibraryResponse {
@@ -63,6 +72,33 @@ export class BooksService {
   getNewReleases(): Observable<BookItem[]> {
     const q = this.lang === 'es' ? 'novela' : 'fiction';
     return this.query({ q, sort: 'new', offset: '0' }, 2024);
+  }
+
+  getDetail(workId: string): Observable<BookDetail> {
+    return this.http.get<any>(`https://openlibrary.org/works/${workId}.json`).pipe(
+      switchMap(work => {
+        const authorKeys: string[] = (work.authors ?? []).map((a: any) => a.author?.key).filter(Boolean);
+        const authorRequests = authorKeys.slice(0, 3).map((key: string) =>
+          this.http.get<any>(`https://openlibrary.org${key}.json`).pipe(
+            map(a => a.name as string),
+            catchError(() => of(''))
+          )
+        );
+        return (authorRequests.length ? forkJoin(authorRequests) : of([])).pipe(
+          map(authors => ({
+            title: work.title,
+            description: typeof work.description === 'string'
+              ? work.description
+              : work.description?.value ?? '',
+            covers: work.covers,
+            subjects: (work.subjects ?? []).slice(0, 8),
+            first_publish_date: work.first_publish_date,
+            authors: (authors as string[]).filter(Boolean)
+          } as BookDetail))
+        );
+      }),
+      catchError(() => of({ title: 'Libro no encontrado' } as BookDetail))
+    );
   }
 
   coverUrl(book: BookItem): string {

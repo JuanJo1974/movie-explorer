@@ -1,0 +1,52 @@
+@if (book() === undefined) {
+  <div class="loading">Cargando...</div>
+} @else {
+  <div class="detail-page">
+    <a class="back-link" routerLink="/libros">← Volver a Libros</a>
+
+    <div class="detail-layout">
+      <!-- Portada -->
+      <div class="cover-col">
+        @if (book()!.covers?.length) {
+          <img class="cover-img" [src]="coverUrl(book()!.covers![0])" [alt]="book()!.title" />
+        } @else {
+          <div class="cover-placeholder">📚</div>
+        }
+        <a class="btn-amazon" [href]="amazonUrl(book()!.title, book()!.authors?.[0])" target="_blank" rel="noopener">
+          🛒 Comprar en Amazon
+        </a>
+      </div>
+
+      <!-- Info -->
+      <div class="info-col">
+        <h1 class="book-title">{{ book()!.title }}</h1>
+
+        @if (book()!.authors?.length) {
+          <p class="book-author">{{ book()!.authors!.join(', ') }}</p>
+        }
+
+        @if (book()!.first_publish_date) {
+          <p class="book-meta">Publicado: {{ book()!.first_publish_date }}</p>
+        }
+
+        @if (book()!.description) {
+          <div class="book-description">
+            <h2>Sinopsis</h2>
+            <p>{{ book()!.description }}</p>
+          </div>
+        }
+
+        @if (book()!.subjects?.length) {
+          <div class="subjects">
+            <h2>Temas</h2>
+            <div class="subject-tags">
+              @for (s of book()!.subjects!; track s) {
+                <span class="tag">{{ s }}</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
