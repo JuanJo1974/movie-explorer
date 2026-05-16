@@ -3,6 +3,9 @@
   publish = "dist/movie-explorer/browser"
   functions = "netlify/functions"
 
+[build.environment]
+  NODE_VERSION = "22"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
