@@ -2,69 +2,83 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
 
-export interface BookVolume {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    publishedDate?: string;
-    description?: string;
-    imageLinks?: { thumbnail?: string; smallThumbnail?: string };
-    infoLink?: string;
-    categories?: string[];
-  };
+export interface BookItem {
+  key: string;
+  title: string;
+  author_name?: string[];
+  cover_i?: number;
+  first_publish_year?: number;
 }
 
-interface GoogleBooksResponse {
-  items?: BookVolume[];
-  totalItems: number;
+interface OpenLibraryResponse {
+  docs: BookItem[];
 }
 
 @Injectable({ providedIn: 'root' })
 export class BooksService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'https://www.googleapis.com/books/v1/volumes';
+  private readonly baseUrl = 'https://openlibrary.org/search.json';
 
   private get lang(): string {
     return navigator.language.startsWith('es') ? 'es' : 'en';
   }
 
-  private fetch(q: string, orderBy: string): Observable<BookVolume[]> {
+  private get dailyOffset(): number {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86_400_000);
+    return (dayOfYear * 16) % 500;
+  }
+
+  private query(params: Record<string, string>, minYear?: number): Observable<BookItem[]> {
+    const lang = this.lang === 'es' ? 'spa' : 'eng';
     return this.http
-      .get<GoogleBooksResponse>(this.baseUrl, {
-        params: {
-          q,
-          orderBy,
-          langRestrict: this.lang,
-          maxResults: '16',
-          printType: 'books'
-        }
-      })
+      .get<OpenLibraryResponse>(this.baseUrl, { params: { ...params, lang, limit: '50' } })
       .pipe(
-        map(r => r.items ?? []),
-        catchError(() => of([]))
+        map(r => {
+          const seen = new Set<string>();
+          return r.docs.filter(b => {
+            if (!b.cover_i) return false;
+            if (minYear && (b.first_publish_year ?? 0) < minYear) return false;
+            const t = b.title.toLowerCase().trim();
+            if (seen.has(t)) return false;
+            seen.add(t);
+            return true;
+          }).slice(0, 16);
+        }),
+        catchError(err => { console.error('Books API error:', err); return of([]); })
       );
   }
 
-  getBestsellers(): Observable<BookVolume[]> {
-    const q = this.lang === 'es' ? 'bestseller libros' : 'bestseller books';
-    return this.fetch(q, 'relevance');
+  search(query: string): Observable<BookItem[]> {
+    if (!query.trim()) return of([]);
+    return this.query({ q: query.trim() });
   }
 
-  getNewReleases(): Observable<BookVolume[]> {
-    const q = this.lang === 'es' ? 'novedades libros 2026' : 'new books 2026';
-    return this.fetch(q, 'newest');
+  getBestsellers(): Observable<BookItem[]> {
+    const q = this.lang === 'es' ? 'novela' : 'fiction';
+    return this.query({ q, sort: 'rating', offset: String(this.dailyOffset) });
   }
 
-  amazonUrl(book: BookVolume): string {
-    const title = book.volumeInfo.title;
-    const author = book.volumeInfo.authors?.[0] ?? '';
-    const query = encodeURIComponent(`${title} ${author}`.trim());
+  getNewReleases(): Observable<BookItem[]> {
+    const q = this.lang === 'es' ? 'novela' : 'fiction';
+    return this.query({ q, sort: 'new', offset: '0' }, 2024);
+  }
+
+  coverUrl(book: BookItem): string {
+    return book.cover_i
+      ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+      : '';
+  }
+
+  infoUrl(book: BookItem): string {
+    return `https://openlibrary.org${book.key}`;
+  }
+
+  amazonUrl(book: BookItem): string {
+    const query = encodeURIComponent(
+      `${book.title} ${book.author_name?.[0] ?? ''}`.trim()
+    );
     return `https://www.amazon.es/s?k=${query}&tag=cineypelis-21&i=stripbooks`;
-  }
-
-  coverUrl(book: BookVolume): string {
-    const img = book.volumeInfo.imageLinks;
-    return img?.thumbnail ?? img?.smallThumbnail ?? '';
   }
 }

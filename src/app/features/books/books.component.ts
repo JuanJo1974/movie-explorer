@@ -1,13 +1,14 @@
-import { Component, inject } from '@angular/core';
-import { SlicePipe } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BooksService, BookVolume } from '../../core/services/books.service';
+import { FormsModule } from '@angular/forms';
+import { Subject, switchMap, debounceTime, distinctUntilChanged, of } from 'rxjs';
+import { BooksService, BookItem } from '../../core/services/books.service';
 import { SeoService } from '../../core/services/seo.service';
 
 @Component({
   selector: 'app-books',
   standalone: true,
-  imports: [SlicePipe],
+  imports: [FormsModule],
   templateUrl: './books.component.html',
   styleUrl: './books.component.scss'
 })
@@ -17,15 +18,30 @@ export class BooksComponent {
   readonly bestsellers = toSignal(this.booksService.getBestsellers());
   readonly newReleases = toSignal(this.booksService.getNewReleases());
 
+  searchQuery = '';
+  searching = signal(false);
+
+  private readonly search$ = new Subject<string>();
+
+  readonly searchResults = toSignal(
+    this.search$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(q => {
+        this.searching.set(!!q.trim());
+        return q.trim() ? this.booksService.search(q) : of(null);
+      })
+    )
+  );
+
   constructor() {
     inject(SeoService).set('Libros', 'Los libros más vendidos y las últimas novedades editoriales con enlace directo para comprar en Amazon.');
   }
 
-  amazonUrl(book: BookVolume): string {
-    return this.booksService.amazonUrl(book);
-  }
+  onSearch(q: string): void { this.search$.next(q); }
+  clearSearch(): void { this.searchQuery = ''; this.search$.next(''); this.searching.set(false); }
 
-  coverUrl(book: BookVolume): string {
-    return this.booksService.coverUrl(book);
-  }
+  amazonUrl(book: BookItem): string { return this.booksService.amazonUrl(book); }
+  coverUrl(book: BookItem): string { return this.booksService.coverUrl(book); }
+  infoUrl(book: BookItem): string { return this.booksService.infoUrl(book); }
 }
